@@ -43,32 +43,32 @@
 <body>
   <div class="signature" title="點擊可複製簽名">by91127 胡閎量 <button id="copySig" aria-label="複製簽名">📋</button></div>
   <header>
-    <h1>教師節祝福小站</h1>
-    <div class="muted">快速製作祝福卡、互動動畫與匯出圖片</div>
+    <h1>教師節網站by91127</h1>
+    <div class="muted">我真的是很閒</div>
   </header>
 
   <main class="container">
     <section class="panel" aria-labelledby="controls-title">
-      <h2 id="controls-title">編輯祝福卡</h2>
+      <h2 id="controls-title">編輯</h2>
 
       <div style="margin-top:12px">
-        <label>老師名稱</label>
-        <input id="teacherName" type="text" placeholder="例如：林老師 / 王老師" value="敬愛的老師" />
+        <label>名稱</label>
+        <input id="teacherName" type="text" placeholder="EX.柯博文老師" value="尊敬的老師" />
       </div>
 
       <div style="margin-top:12px">
         <label>祝福文字</label>
-        <textarea id="message">感謝您耐心教導與栽培，教師節快樂！</textarea>
+        <textarea id="message">教師節快樂！</textarea>
       </div>
 
       <div style="margin-top:12px" class="row">
         <div style="flex:1">
           <label>主題</label>
           <select id="themeSelect">
-            <option value="#ff8a65">溫暖橘</option>
-            <option value="#4db6ac">清新綠</option>
-            <option value="#90caf9">天空藍</option>
-            <option value="#ce93d8">柔和紫</option>
+            <option value="#ff8a65">橘</option>
+            <option value="#4db6ac">綠</option>
+            <option value="#90caf9">藍</option>
+            <option value="#ce93d8">紫</option>
           </select>
         </div>
         <div style="width:120px">
@@ -83,42 +83,42 @@
 
       <div style="margin-top:12px" class="row">
         <div style="flex:1">
-          <label>老師照片（選填，支援拖放）</label>
+          <label>老師照片</label>
           <input id="photoInput" type="file" accept="image/*" />
         </div>
         <div style="width:110px; display:flex; align-items:flex-end; gap:8px">
-          <button class="btn" id="sendBtn">送出祝福</button>
+          <button class="btn" id="sendBtn">送出</button>
         </div>
       </div>
 
       <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap">
-        <button id="savePng" class="btn">下載為圖片</button>
-        <button id="printBtn" class="btn">列印</button>
-        <button id="shareBtn" class="btn">分享（支援裝置）</button>
-        <button id="resetBtn" class="btn" style="background:#6b6b6b">重設</button>
+        <button id="savePng" class="btn">下載為圖片(可能有BUG)</button>
+        <button id="printBtn" class="btn">列印(可能有BUG)</button>
+        <button id="shareBtn" class="btn">分享（可能有BUG)</button>
+        <button id="resetBtn" class="btn" style="background:#6b6b6b">重設(應該有BUG)</button>
       </div>
 
-      <p class="muted" style="margin-top:10px">提示：按「送出祝福」會在預覽出現彩帶特效與音效。若想把祝福儲存在伺服器或多人留言牆，我可以幫你接後端。</p>
+      <p class="muted" style="margin-top:10px">做得挺潦草的</p>
     </section>
 
     <aside class="panel preview-wrap">
-      <h2>即時預覽</h2>
-      <div id="cardPreview" class="card" role="img" aria-label="祝福卡預覽" style="margin-top:12px; --accent:var(--accent)">
+      <h2>預覽畫面</h2>
+      <div id="cardPreview" class="card" role="img" aria-label="預覽" style="margin-top:12px; --accent:var(--accent)">
         <div class="card-top">
           <img id="photoPreview" class="teacher-photo" src="" alt="老師照片" style="display:none" />
           <div>
             <div class="small">教師節快樂</div>
-            <div id="namePreview" style="font-weight:800; font-size:16px; margin-top:6px">敬愛的老師</div>
+            <div id="namePreview" style="font-weight:800; font-size:16px; margin-top:6px">尊敬的老師</div>
           </div>
         </div>
 
         <div class="card-body">
-          <p id="messagePreview">感謝您耐心教導與栽培，教師節快樂！</p>
+          <p id="messagePreview">教師節快樂！</p>
         </div>
 
         <div class="card-footer">
-          <div class="small">由學生獻上</div>
-          <div class="small">— 教學有您，溫暖一路</div>
+          <div class="small">感謝老師</div>
+          <div class="small">— 讚嘆老師</div>
         </div>
       </div>
 
@@ -131,19 +131,19 @@
       <h2 id="msg-wall-title">留言牆</h2>
 
       <div style="margin-top:12px">
-        <label>稱呼（選填）</label>
-        <input id="msgName" type="text" placeholder="例如：小明 / 匿名學生" />
+        <label>暱稱</label>
+        <input id="msgName" type="text" placeholder="例:Allen" />
       </div>
 
       <div style="margin-top:12px">
-        <label>留言內容</label>
-        <textarea id="msgText" placeholder="寫下你對老師的話…"></textarea>
+        <label>留言</label>
+        <textarea id="msgText" placeholder="寫一些話吧!"></textarea>
       </div>
 
       <div style="margin-top:12px; display:flex; gap:8px; align-items:center">
-        <button id="sendMsgBtn" class="btn">發佈留言</button>
+        <button id="sendMsgBtn" class="btn">發佈</button>
         <button id="signOutBtn" class="btn" style="background:#6b6b6b">登出</button>
-        <div class="muted" style="margin-left:auto">留言將會即時出現在下方</div>
+        <div class="muted" style="margin-left:auto">留言會出現在下面</div>
       </div>
 
       <div style="margin-top:16px">
@@ -215,7 +215,7 @@
     });
 
     async function sendMessage(){
-      if (!currentUser) return alert('請先登入（或允許匿名登入）');
+      if (!currentUser) return alert('請先登入');
       const name = (nameInput.value || '匿名學生').slice(0,60);
       const text = (textInput.value || '').trim();
       if (!text) return alert('請輸入留言內容');
@@ -431,7 +431,7 @@
 
     // reset
     resetBtn.addEventListener('click', ()=>{
-      teacherName.value = '敬愛的老師'; message.value='感謝您耐心教導與栽培，教師節快樂！'; theme.value='#ff8a65'; fontSize.value='22'; photoInput.value=''; photoPreview.style.display='none'; namePreview.textContent = teacherName.value; messagePreview.textContent = message.value; applyThemeColor(theme.value);
+      teacherName.value = '尊敬的老師'; message.value='教師節快樂！'; theme.value='#ff8a65'; fontSize.value='22'; photoInput.value=''; photoPreview.style.display='none'; namePreview.textContent = teacherName.value; messagePreview.textContent = message.value; applyThemeColor(theme.value);
     });
 
     // small accessibility: update preview with initial values
