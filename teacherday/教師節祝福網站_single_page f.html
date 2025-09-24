@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>教師節快樂 — by91127 胡閎量</title>
+  <style>
+    :root{
+      --bg:#f5f7fb; --card:#ffffff; --accent:#ff8a65; --muted:#6b6b6b;
+    }
+    *{box-sizing:border-box}
+    body{font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", "Helvetica Neue", Arial; margin:0; background:var(--bg); color:#111}
+    header{padding:18px 20px; display:flex; align-items:center; gap:12px}
+    h1{margin:0; font-size:20px}
+    .container{display:grid; grid-template-columns:1fr 480px; gap:18px; padding:18px; max-width:1180px; margin:auto}
+    .panel{background:rgba(255,255,255,0.9); padding:14px; border-radius:12px; box-shadow:0 6px 18px rgba(20,20,40,0.06)}
+    label{display:block; font-size:13px; margin-bottom:6px; color:var(--muted)}
+    input[type=text], textarea, select{width:100%; padding:10px; border-radius:8px; border:1px solid #e4e7ef; font-size:14px}
+    textarea{min-height:120px; resize:vertical}
+    .row{display:flex; gap:10px}
+    .btn{display:inline-block; padding:10px 14px; border-radius:10px; border:none; cursor:pointer; background:var(--accent); color:#fff; font-weight:600}
+    .muted{color:var(--muted); font-size:13px}
+    /* preview card */
+    .preview-wrap{position:relative}
+    .card{width:100%; height:360px; border-radius:12px; overflow:hidden; display:flex; flex-direction:column; justify-content:space-between; padding:18px; background:linear-gradient(135deg,var(--card),#fff); box-shadow:0 8px 30px rgba(10,10,30,0.06)}
+    .teacher-photo{width:96px; height:96px; border-radius:12px; object-fit:cover; border:4px solid rgba(255,255,255,0.6)}
+    .card-top{display:flex; gap:14px; align-items:center}
+    .card-body{flex:1; display:flex; align-items:center; justify-content:center; text-align:center}
+    .card-body p{margin:0; padding:0 8px; font-size:20px}
+    .card-footer{display:flex; justify-content:space-between; align-items:center}
+    .small{font-size:12px; color:var(--muted)}
+    /* signature on top-right */
+    .signature{position:fixed; right:12px; top:12px; background:rgba(0,0,0,0.04); padding:6px 10px; border-radius:999px; font-weight:600; font-size:12px; backdrop-filter: blur(4px)}
+    .signature:hover{transform:scale(1.02)}
+    .signature button{background:none;border:none;margin-left:8px;cursor:pointer;color:#555}
+    /* responsive */
+    @media (max-width:980px){
+      .container{grid-template-columns:1fr; padding:12px}
+      .card{height:300px}
+    }
+  </style>
+</head>
+<body>
+  <div class="signature" title="點擊可複製簽名">by91127 胡閎量 <button id="copySig" aria-label="複製簽名">📋</button></div>
+  <header>
+    <h1>教師節祝福小站</h1>
+    <div class="muted">快速製作祝福卡、互動動畫與匯出圖片</div>
+  </header>
+
+  <main class="container">
+    <section class="panel" aria-labelledby="controls-title">
+      <h2 id="controls-title">編輯祝福卡</h2>
+
+      <div style="margin-top:12px">
+        <label>老師名稱</label>
+        <input id="teacherName" type="text" placeholder="例如：林老師 / 王老師" value="敬愛的老師" />
+      </div>
+
+      <div style="margin-top:12px">
+        <label>祝福文字</label>
+        <textarea id="message">感謝您耐心教導與栽培，教師節快樂！</textarea>
+      </div>
+
+      <div style="margin-top:12px" class="row">
+        <div style="flex:1">
+          <label>主題</label>
+          <select id="themeSelect">
+            <option value="#ff8a65">溫暖橘</option>
+            <option value="#4db6ac">清新綠</option>
+            <option value="#90caf9">天空藍</option>
+            <option value="#ce93d8">柔和紫</option>
+          </select>
+        </div>
+        <div style="width:120px">
+          <label>字體大小</label>
+          <select id="fontSize">
+            <option value="18">中</option>
+            <option value="22" selected>大</option>
+            <option value="26">更大</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-top:12px" class="row">
+        <div style="flex:1">
+          <label>老師照片（選填，支援拖放）</label>
+          <input id="photoInput" type="file" accept="image/*" />
+        </div>
+        <div style="width:110px; display:flex; align-items:flex-end; gap:8px">
+          <button class="btn" id="sendBtn">送出祝福</button>
+        </div>
+      </div>
+
+      <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap">
+        <button id="savePng" class="btn">下載為圖片</button>
+        <button id="printBtn" class="btn">列印</button>
+        <button id="shareBtn" class="btn">分享（支援裝置）</button>
+        <button id="resetBtn" class="btn" style="background:#6b6b6b">重設</button>
+      </div>
+
+      <p class="muted" style="margin-top:10px">提示：按「送出祝福」會在預覽出現彩帶特效與音效。若想把祝福儲存在伺服器或多人留言牆，我可以幫你接後端。</p>
+    </section>
+
+    <aside class="panel preview-wrap">
+      <h2>即時預覽</h2>
+      <div id="cardPreview" class="card" role="img" aria-label="祝福卡預覽" style="margin-top:12px; --accent:var(--accent)">
+        <div class="card-top">
+          <img id="photoPreview" class="teacher-photo" src="" alt="老師照片" style="display:none" />
+          <div>
+            <div class="small">教師節快樂</div>
+            <div id="namePreview" style="font-weight:800; font-size:16px; margin-top:6px">敬愛的老師</div>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <p id="messagePreview">感謝您耐心教導與栽培，教師節快樂！</p>
+        </div>
+
+        <div class="card-footer">
+          <div class="small">由學生獻上</div>
+          <div class="small">— 教學有您，溫暖一路</div>
+        </div>
+      </div>
+
+      <!-- canvas for confetti (canvas-confetti uses its own) -->
+      <canvas id="confetti-canvas" style="position:absolute; inset:0; pointer-events:none"></canvas>
+    </aside>
+  
+
+    <section class="panel" id="message-wall" aria-labelledby="msg-wall-title" style="grid-column:1/-1">
+      <h2 id="msg-wall-title">留言牆</h2>
+
+      <div style="margin-top:12px">
+        <label>稱呼（選填）</label>
+        <input id="msgName" type="text" placeholder="例如：小明 / 匿名學生" />
+      </div>
+
+      <div style="margin-top:12px">
+        <label>留言內容</label>
+        <textarea id="msgText" placeholder="寫下你對老師的話…"></textarea>
+      </div>
+
+      <div style="margin-top:12px; display:flex; gap:8px; align-items:center">
+        <button id="sendMsgBtn" class="btn">發佈留言</button>
+        <button id="signOutBtn" class="btn" style="background:#6b6b6b">登出</button>
+        <div class="muted" style="margin-left:auto">留言將會即時出現在下方</div>
+      </div>
+
+      <div style="margin-top:16px">
+        <h3>留言列表</h3>
+        <div id="messagesList" style="max-height:360px; overflow:auto; padding:8px; border-radius:8px; background:rgba(0,0,0,0.02)"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Firebase 留言牆模組化腳本 -->
+  <script type="module">
+    // Firebase Web SDK (modular) — 留言牆整合
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js';
+    import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, deleteDoc, doc } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js';
+    import { getAuth, signInAnonymously, onAuthStateChanged, signOut, getIdTokenResult } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
+
+    // ==== 請把下面的 firebaseConfig 換成你自己的設定（從 Firebase Console -> Project settings -> Your apps 取得） ====
+    const firebaseConfig = {
+      apiKey: "REPLACE_ME",
+      authDomain: "REPLACE_ME",
+      projectId: "REPLACE_ME",
+      // ...其他欄位
+    };
+
+    // 初始化
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    // DOM refs
+    const messagesList = document.getElementById('messagesList');
+    const sendBtn = document.getElementById('sendMsgBtn');
+    const nameInput = document.getElementById('msgName');
+    const textInput = document.getElementById('msgText');
+    const signOutBtn = document.getElementById('signOutBtn');
+
+    let currentUser = null;
+    let isAdmin = false;
+
+    // 匿名登入（快速上手）
+    signInAnonymously(auth).catch(err => console.warn('匿名登入失敗', err));
+
+    onAuthStateChanged(auth, async (user) => {
+      currentUser = user;
+      if (user) {
+        try {
+          const tokenRes = await getIdTokenResult(user, false);
+          isAdmin = !!(tokenRes?.claims?.admin);
+        } catch (e) {
+          isAdmin = false;
+        }
+        signOutBtn.style.display = 'inline-block';
+      } else {
+        isAdmin = false;
+        signOutBtn.style.display = 'none';
+      }
+      // 重新 render 列表按鈕可見性
+      // (onSnapshot 內會重新生成按鈕，使用最新的 isAdmin & currentUser)
+    });
+
+    signOutBtn.addEventListener('click', async ()=>{
+      try{ await signOut(auth); alert('已登出'); }
+      catch(e){ console.warn('登出失敗', e); }
+    });
+
+    async function sendMessage(){
+      if (!currentUser) return alert('請先登入（或允許匿名登入）');
+      const name = (nameInput.value || '匿名學生').slice(0,60);
+      const text = (textInput.value || '').trim();
+      if (!text) return alert('請輸入留言內容');
+      sendBtn.disabled = true;
+      try{
+        await addDoc(collection(db, 'messages'), {
+          name, text, uid: currentUser.uid, createdAt: serverTimestamp()
+        });
+        textInput.value = '';
+      }catch(e){ console.error('新增留言失敗', e); alert('新增留言失敗：'+e.message); }
+      sendBtn.disabled = false;
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+
+    // 取得並即時監聽 messages
+    const q = query(collection(db, 'messages'), orderBy('createdAt', 'desc'));
+    onSnapshot(q, (snapshot) => {
+      messagesList.innerHTML = '';
+      if (snapshot.empty) {
+        messagesList.innerHTML = '<div class="muted">目前還沒有留言，快來當第一個吧！</div>';
+        return;
+      }
+      snapshot.forEach(docSnap => {
+        const d = docSnap.data();
+        const id = docSnap.id;
+
+        const row = document.createElement('div');
+        row.style.padding = '10px'; row.style.borderBottom = '1px solid rgba(0,0,0,0.04)'; row.style.display='flex'; row.style.alignItems='flex-start';
+
+        const left = document.createElement('div');
+        left.style.flex='1';
+        const nameEl = document.createElement('div'); nameEl.textContent = d.name || '匿名'; nameEl.style.fontWeight='700';
+        const textEl = document.createElement('div'); textEl.textContent = d.text || ''; textEl.style.margin='6px 0';
+        const metaEl = document.createElement('div'); metaEl.className='muted'; metaEl.style.fontSize='12px';
+        metaEl.textContent = d.createdAt ? new Date(d.createdAt.seconds * 1000).toLocaleString() : '';
+
+        left.appendChild(nameEl); left.appendChild(textEl); left.appendChild(metaEl);
+        row.appendChild(left);
+
+        // actions（刪除）
+        const actions = document.createElement('div'); actions.style.marginLeft='12px';
+        if (currentUser && (d.uid === currentUser.uid || isAdmin)){
+          const del = document.createElement('button'); del.textContent='刪除'; del.className='btn'; del.style.background='#e57373'; del.addEventListener('click', async ()=>{
+            if (!confirm('確定要刪除此留言嗎？')) return;
+            try{ await deleteDoc(doc(db, 'messages', id)); }catch(e){ console.error('刪除失敗', e); alert('刪除失敗：'+e.message); }
+          });
+          actions.appendChild(del);
+        }
+        row.appendChild(actions);
+        messagesList.appendChild(row);
+      });
+    }, (err)=>{ console.error('監聽留言失敗', err); messagesList.innerHTML = '<div class="muted">載入留言失敗，請檢查 Console</div>'; });
+
+    // Debug
+    window._fs = { db, auth };
+  </script>
+
+</body>
+
+  <!-- Libraries from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+  <script>
+    // Helper: DOM refs
+    const teacherName = document.getElementById('teacherName');
+    const message = document.getElementById('message');
+    const theme = document.getElementById('themeSelect');
+    const fontSize = document.getElementById('fontSize');
+    const photoInput = document.getElementById('photoInput');
+    const photoPreview = document.getElementById('photoPreview');
+    const namePreview = document.getElementById('namePreview');
+    const messagePreview = document.getElementById('messagePreview');
+    const cardPreview = document.getElementById('cardPreview');
+    const sendBtn = document.getElementById('sendBtn');
+    const savePng = document.getElementById('savePng');
+    const printBtn = document.getElementById('printBtn');
+    const shareBtn = document.getElementById('shareBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const confettiCanvas = document.getElementById('confetti-canvas');
+
+    // initialize theme color
+    function applyThemeColor(c){
+      document.documentElement.style.setProperty('--accent', c);
+      // small gradient change to card background using the chosen color
+      cardPreview.style.background = `linear-gradient(135deg, ${c}15, #fff)`;
+      // adjust property accessible in CSS variable if needed
+    }
+    applyThemeColor(theme.value);
+
+    // live update functions
+    teacherName.addEventListener('input', ()=> namePreview.textContent = teacherName.value || '敬愛的老師');
+    message.addEventListener('input', ()=> messagePreview.textContent = message.value || '感謝您耐心教導與栽培，教師節快樂！');
+    theme.addEventListener('change', ()=> applyThemeColor(theme.value));
+    fontSize.addEventListener('change', ()=> messagePreview.style.fontSize = fontSize.value + 'px');
+
+    // photo handling (file -> dataURL)
+    photoInput.addEventListener('change', async (e)=>{
+      const f = e.target.files[0];
+      if(!f) return;
+      const url = URL.createObjectURL(f);
+      photoPreview.src = url;
+      photoPreview.style.display = 'block';
+    });
+
+    // drag & drop support onto the preview
+    cardPreview.addEventListener('dragover', (e)=>{ e.preventDefault(); cardPreview.style.opacity = 0.9 });
+    cardPreview.addEventListener('dragleave', (e)=>{ cardPreview.style.opacity = 1 });
+    cardPreview.addEventListener('drop', (e)=>{
+      e.preventDefault(); cardPreview.style.opacity = 1;
+      const file = e.dataTransfer.files && e.dataTransfer.files[0];
+      if(file && file.type.startsWith('image/')){
+        photoInput.files = e.dataTransfer.files;
+        const url = URL.createObjectURL(file);
+        photoPreview.src = url; photoPreview.style.display = 'block';
+      }
+    });
+
+    // copy signature
+    document.getElementById('copySig').addEventListener('click', ()=>{
+      navigator.clipboard?.writeText('by91127 胡閎量').then(()=>{
+        alert('簽名已複製到剪貼簿');
+      }).catch(()=>alert('複製失敗，請手動選取複製'));
+    });
+
+    // simple chime with WebAudio (no external audio files)
+    function chime(){
+      try{
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        // resume if autoplay policy suspended the context
+        if (ctx.state === 'suspended' && typeof ctx.resume === 'function') {
+          ctx.resume().catch(()=>{});
+        }
+        const now = ctx.currentTime;
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = 'sine';
+        o.frequency.setValueAtTime(880, now);
+        g.gain.setValueAtTime(0, now);
+        g.gain.linearRampToValueAtTime(0.12, now + 0.01);
+        o.connect(g); g.connect(ctx.destination);
+        o.start(now);
+        o.frequency.exponentialRampToValueAtTime(660, now + 0.25);
+        g.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+        o.stop(now + 0.7);
+      }catch(e){ console.warn('Audio not supported', e)}
+    }
+
+    // confetti using canvas-confetti (fixed reference and safe guards)
+    const confettiLib = window.confetti || null;
+    function burstConfetti(){
+      if(!confettiLib){ console.warn('confetti lib not loaded'); return; }
+      try{
+        const myConfetti = confettiLib.create(confettiCanvas, {resize:true, useWorker:true});
+        myConfetti({particleCount:60, spread:120, startVelocity:50});
+        setTimeout(()=> myConfetti({particleCount:40, spread:80, origin:{x:0.2, y:0.2}}), 250);
+      }catch(e){ console.warn('confetti error', e) }
+    }
+
+    // send button behavior
+    sendBtn.addEventListener('click', ()=>{
+      // visual pulse on card
+      cardPreview.animate([{transform:'scale(1)'},{transform:'scale(1.02)'}],{duration:240, easing:'ease-out'});
+      // confetti + chime
+      burstConfetti(); chime();
+      // small temporary overlay text
+      const overlay = document.createElement('div');
+      overlay.textContent = '祝福已送出 🎉';
+      overlay.style.position='absolute'; overlay.style.left='50%'; overlay.style.top='20%'; overlay.style.transform='translate(-50%,-50%)';
+      overlay.style.padding='10px 14px'; overlay.style.borderRadius='12px'; overlay.style.background='rgba(255,255,255,0.9)'; overlay.style.fontWeight='700';
+      cardPreview.appendChild(overlay);
+      setTimeout(()=> overlay.remove(), 1600);
+    });
+
+    // save as PNG using html2canvas
+    savePng.addEventListener('click', async ()=>{
+      savePng.disabled = true; savePng.textContent = '處理中...';
+      try{
+        const canvas = await html2canvas(cardPreview, {backgroundColor:null, scale:2});
+        const a = document.createElement('a');
+        a.href = canvas.toDataURL('image/png');
+        a.download = `${(teacherName.value||'teacher')}_teacherday.png`;
+        a.click();
+      }catch(e){ alert('匯出失敗：'+e.message) }
+      savePng.disabled=false; savePng.textContent='下載為圖片';
+    });
+
+    // print (open in new window)
+    printBtn.addEventListener('click', async ()=>{
+      const canvas = await html2canvas(cardPreview, {backgroundColor:'#fff', scale:2});
+      const data = canvas.toDataURL();
+      const w = window.open('','_blank');
+      w.document.write(`<img src="${data}" style="max-width:100%;height:auto;display:block;margin:0 auto"/>`);
+      w.document.title = '列印祝福卡 - 教師節';
+      setTimeout(()=> w.print(), 500);
+    });
+
+    // share via Web Share API if available
+    shareBtn.addEventListener('click', async ()=>{
+      if(navigator.share){
+        try{
+          const canvas = await html2canvas(cardPreview, {backgroundColor:null, scale:2});
+          canvas.toBlob(async (blob)=>{
+            const filesArray = [new File([blob], 'teacherday.png', {type:'image/png'})];
+            await navigator.share({ files: filesArray, title: '教師節祝福', text: `${teacherName.value || '敬愛的老師'}，收到一張祝福卡` });
+          });
+        }catch(e){ alert('分享失敗：'+e.message) }
+      }else{
+        alert('您的裝置或瀏覽器不支援分享功能，可先下載圖片再手動分享。');
+      }
+    });
+
+    // reset
+    resetBtn.addEventListener('click', ()=>{
+      teacherName.value = '敬愛的老師'; message.value='感謝您耐心教導與栽培，教師節快樂！'; theme.value='#ff8a65'; fontSize.value='22'; photoInput.value=''; photoPreview.style.display='none'; namePreview.textContent = teacherName.value; messagePreview.textContent = message.value; applyThemeColor(theme.value);
+    });
+
+    // small accessibility: update preview with initial values
+    namePreview.textContent = teacherName.value;
+    messagePreview.textContent = message.value;
+    messagePreview.style.fontSize = fontSize.value + 'px';
+
+    // keyboard shortcut: Ctrl/Cmd+S to save image
+    window.addEventListener('keydown', (e)=>{
+      if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='s'){
+        e.preventDefault(); savePng.click();
+      }
+    });
+
+  </script>
+</body>
+</html>
