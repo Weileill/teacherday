@@ -162,12 +162,16 @@
     import { getAuth, signInAnonymously, onAuthStateChanged, signOut, getIdTokenResult } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
 
     // ==== 請把下面的 firebaseConfig 換成你自己的設定（從 Firebase Console -> Project settings -> Your apps 取得） ====
-    const firebaseConfig = {
-      apiKey: "REPLACE_ME",
-      authDomain: "REPLACE_ME",
-      projectId: "REPLACE_ME",
-      // ...其他欄位
-    };
+   const firebaseConfig = {
+    apiKey: "AIzaSyCGAHMdlflIB8TuFRSNUG-TFoR6ZfyOOio",
+    authDomain: "teacher-s-day-cf394.firebaseapp.com",
+    projectId: "teacher-s-day-cf394",
+    storageBucket: "teacher-s-day-cf394.firebasestorage.app",
+    messagingSenderId: "755868270794",
+    appId: "1:755868270794:web:3256deee33f2678942b433",
+    measurementId: "G-XBDCTPTQBB"
+  };
+
 
     // 初始化
     const app = initializeApp(firebaseConfig);
